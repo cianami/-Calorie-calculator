@@ -116,13 +116,13 @@ fun DailyNorm(norm: Int){
         Text(
             text = "Ваша норма: ",
             fontSize = 27.sp,
-            color = Color(0xff3A6279),
+            color = Color(0xff544161),
             modifier = Modifier.offset(y = -30.dp)
         )
         Text(
             text = "$norm",
             fontSize = 30.sp,
-            color = Color(0xff3A6279),
+            color = Color(0xff544161),
             modifier = Modifier.offset(y = -30.dp)
         )
     }
