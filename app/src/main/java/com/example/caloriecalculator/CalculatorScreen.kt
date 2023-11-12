@@ -87,18 +87,19 @@ fun Calculator(modifier: Modifier) {
                 mutableStateOf("")
             }
             Row(
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 RadioButton(
                     selected = selectGender.value == Gender.male,
                     onClick = { selectGender.value = Gender.male },
                 )
-                Text(Gender.male)
+                Text(Gender.male, fontSize = 20.sp, color = Color(0xff473366))
 
                 RadioButton(
                     selected = selectGender.value == Gender.female,
                     onClick = { selectGender.value = Gender.female }
                 )
-                Text(Gender.female)
+                Text(Gender.female, fontSize = 20.sp, color = Color(0xff473366))
             }
         }
         Row(
@@ -175,18 +176,21 @@ object Gender {
 @Composable
 fun ResultText(result:Int){
        Column (
-           horizontalAlignment = Alignment.CenterHorizontally
+           horizontalAlignment = Alignment.CenterHorizontally,
+           modifier = Modifier
+               .fillMaxWidth()
+               .offset(y=-80.dp)
        ){
            Text(
                text = "Ваш результат: ",
-               color = Color(0xff3A6279),
+               color = Color(0xff544161),
                fontSize = 26.sp,
                textAlign = TextAlign.Center
            )
            Text(
                text = "$result",
-               color = Color(0xff3A6279),
-               fontSize = 26.sp,
+               color = Color(0xff544161),
+               fontSize = 32.sp,
                textAlign = TextAlign.Center
            )
 
