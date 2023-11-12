@@ -84,11 +84,8 @@ fun HomeScreen(modifier: Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "30 октября, понедельник",
-            color = Color(0xff3A6279),
-            modifier = Modifier.offset(y = -100.dp)
-        )
+        CurrentDate("30 октрября, понедельник")
+        DailyNorm(1500)
        CircleAndInd(1037)
         Button(
             modifier = Modifier.width(260.dp).height(100.dp)
@@ -100,6 +97,34 @@ fun HomeScreen(modifier: Modifier) {
         }
         Card("Каша гречневая с курицей", 200, 265)
         Card("Творог 1%", 100, 229)
+    }
+}
+
+@Composable
+fun CurrentDate(today: String){
+    Text(
+        text = today,
+        color = Color(0xff3A6279),
+        modifier = Modifier.offset(y = -80.dp)
+    )
+}
+
+@Composable
+fun DailyNorm(norm: Int){
+    Row (
+    ){
+        Text(
+            text = "Ваша норма: ",
+            fontSize = 27.sp,
+            color = Color(0xff3A6279),
+            modifier = Modifier.offset(y = -30.dp)
+        )
+        Text(
+            text = "$norm",
+            fontSize = 30.sp,
+            color = Color(0xff3A6279),
+            modifier = Modifier.offset(y = -30.dp)
+        )
     }
 }
 

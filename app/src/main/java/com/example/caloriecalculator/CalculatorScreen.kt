@@ -175,7 +175,7 @@ object Gender {
 @Composable
 fun ResultText(result:Int){
        Column (
-           horizontalAlignment = Alignment.Start
+           horizontalAlignment = Alignment.CenterHorizontally
        ){
            Text(
                text = "Ваш результат: ",
