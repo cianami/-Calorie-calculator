@@ -1,6 +1,7 @@
 package com.example.caloriecalculator
+import android.app.AlertDialog
+import android.content.Context
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -8,14 +9,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Calculator(modifier: Modifier) {
+fun Calculator(context: Context,modifier: Modifier) {
+    var textAge by remember { mutableStateOf("") }
+    var textWeight by remember { mutableStateOf("") }
+    var textHeight by remember { mutableStateOf("") }
+    val selectGender = remember { mutableStateOf(Gender.male) }
 //    Text(
 //        text = "Calculator",
 //        fontWeight = FontWeight.Bold,
@@ -26,7 +31,8 @@ fun Calculator(modifier: Modifier) {
 //    )
     Column(
         modifier =
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
@@ -50,19 +56,22 @@ fun Calculator(modifier: Modifier) {
                 fontSize = 22.sp,
                 // modifier = Modifier.offset(y = -100.dp)
             )
-            var text by remember { mutableStateOf("") }
+
             TextField(
                 modifier = Modifier.width(100.dp),
-                value = text,
+                value = textAge,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                 ),
+                placeholder = {Text("0")},
                 singleLine = true,
                 onValueChange = { newText ->
-                text = newText
+                    if (newText.toIntOrNull() != null||newText=="") {
+                        textAge = newText
+                    }
             }
             )
             Text(
@@ -83,14 +92,13 @@ fun Calculator(modifier: Modifier) {
                 fontSize = 22.sp,
                 // modifier = Modifier.offset(y = -100.dp)
             )
-            val selectGender = remember {
-                mutableStateOf("")
-            }
+
             Row(
             ) {
                 RadioButton(
                     selected = selectGender.value == Gender.male,
                     onClick = { selectGender.value = Gender.male },
+
                 )
                 Text(Gender.male)
 
@@ -110,19 +118,21 @@ fun Calculator(modifier: Modifier) {
                 color = Color(0xff473366),
                 fontSize = 22.sp,
             )
-            var text by remember { mutableStateOf("") }
             TextField(
                 modifier = Modifier.width(100.dp),
-                value = text,
+                value = textWeight,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                 ),
+                placeholder = {Text("0")},
                 singleLine = true,
                 onValueChange = { newText ->
-                    text = newText
+                    if (newText.toIntOrNull() != null||newText=="") {
+                        textWeight = newText
+                    }
                 }
             )
             Text(
@@ -141,19 +151,22 @@ fun Calculator(modifier: Modifier) {
                 fontSize = 22.sp,
                 // modifier = Modifier.offset(y = -100.dp)
             )
-            var text by remember { mutableStateOf("") }
+
             TextField(
                 modifier = Modifier.width(100.dp),
-                value = text,
+                value = textHeight,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                 ),
+                placeholder = {Text("0")},
                 singleLine = true,
                 onValueChange = { newText ->
-                    text = newText
+                    if (newText.toIntOrNull() != null||newText=="") {
+                        textHeight = newText
+                    }
                 }
             )
             Text(
@@ -163,10 +176,19 @@ fun Calculator(modifier: Modifier) {
                 // modifier = Modifier.offset(y = -100.dp)
             )
         }
-        ResultText(1200)
+        ResultText(a(context,textAge,selectGender.value,textWeight, textHeight))
     }
 }
 
+fun a(context: Context, age:String, gender:String, weight:String, height:String ):Int{
+    var iAge = ("0$age").toInt()
+    var iWeight = ("0$weight").toInt()
+    var iHeight = ("0$height").toInt()
+    var result= (10*iWeight+6.25*iHeight-5*iAge).toInt();
+    if(gender==Gender.female) result-=161;
+    else result+=5;
+  return kotlin.math.max(result,5);
+}
 object Gender {
     const val male = "Мужчина"
     const val female = "Женщина"
