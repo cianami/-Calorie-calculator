@@ -15,6 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun CircleShapeDemo() {
@@ -32,7 +36,7 @@ fun ExampleBox(shape: Shape) {
 }
 
 @Composable
-fun CircleAndInd(calorie:Int) {
+fun CircleAndInd(userCalorieData: UserCalorieData,calorie:Int) {
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -40,7 +44,7 @@ fun CircleAndInd(calorie:Int) {
         CircularProgressIndicator(
             modifier = Modifier.size(200.dp),
             strokeWidth = 15.dp,
-            progress = 0.3f,
+            progress = calorie.toFloat()/userCalorieData.result,
             color = Color(0xffDEAAFF)
         )
         Text(
@@ -76,7 +80,7 @@ fun FilledButton() {
 
 
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier) {
     var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier =
@@ -84,9 +88,9 @@ fun HomeScreen(modifier: Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CurrentDate("30 октрября, понедельник")
-        DailyNorm(1500)
-       CircleAndInd(1037)
+        CurrentDate( SimpleDateFormat("d MMMM, EEEE", Locale("ru", "RU")).format(Date()))
+        DailyNorm(userCalorieData.result)
+        CircleAndInd(userCalorieData,1037)
         Button(
             modifier = Modifier.width(260.dp).height(100.dp)
                 .wrapContentSize(Alignment.Center).offset(y = 32.dp), onClick = { showDialog = true },
@@ -135,5 +139,5 @@ fun onClick() {
 @Composable
 @Preview
 fun HomeScreenPreview(){
-    HomeScreen(Modifier)
+    HomeScreen(UserCalorieData(),Modifier)
 }

@@ -14,13 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Calculator(context: Context,modifier: Modifier) {
-    var textAge by remember { mutableStateOf("") }
-    var textWeight by remember { mutableStateOf("") }
-    var textHeight by remember { mutableStateOf("") }
-    val selectGender = remember { mutableStateOf(Gender.male) }
+fun Calculator(context: Context,userCalorieData: UserCalorieData,modifier: Modifier) {
+    var textAge by remember { mutableStateOf(userCalorieData.age) }
+    var textWeight by remember { mutableStateOf(userCalorieData.weight) }
+    var textHeight by remember { mutableStateOf(userCalorieData.height) }
+    val selectGender = remember { mutableStateOf(userCalorieData.gender) }
 //    Text(
 //        text = "Calculator",
 //        fontWeight = FontWeight.Bold,
@@ -177,19 +178,10 @@ fun Calculator(context: Context,modifier: Modifier) {
                 // modifier = Modifier.offset(y = -100.dp)
             )
         }
-        ResultText(a(context,textAge,selectGender.value,textWeight, textHeight))
+        ResultText(a(context,userCalorieData,textAge,selectGender.value,textWeight, textHeight))
     }
 }
 
-fun a(context: Context, age:String, gender:String, weight:String, height:String ):Int{
-    var iAge = ("0$age").toInt()
-    var iWeight = ("0$weight").toInt()
-    var iHeight = ("0$height").toInt()
-    var result= (10*iWeight+6.25*iHeight-5*iAge).toInt();
-    if(gender==Gender.female) result-=161;
-    else result+=5;
-  return kotlin.math.max(result,5);
-}
 object Gender {
     const val male = "Мужчина"
     const val female = "Женщина"

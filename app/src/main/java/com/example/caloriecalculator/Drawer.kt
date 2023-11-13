@@ -12,7 +12,7 @@ import android.content.Context
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainDrawer(context: Context,){
+fun MainDrawer(context: Context, userCalorieData: UserCalorieData){
     var screenState by remember { mutableStateOf(Screen.Home) }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -22,15 +22,15 @@ fun MainDrawer(context: Context,){
             bottomBar = { BottomBar { screen -> screenState = screen } },
             modifier = Modifier.fillMaxSize()
         ) {
-            ScreenContents(context, screenState)
+            ScreenContents(context, screenState, userCalorieData)
         }
     }
 }
 @Composable
-fun ScreenContents(context: Context,selectedScreen: Screen, modifier:Modifier = Modifier){
+fun ScreenContents(context: Context,selectedScreen: Screen,userCalorieData: UserCalorieData,modifier:Modifier = Modifier){
     when (selectedScreen){
-        Screen.Home -> HomeScreen(modifier)
-        Screen.Calculator -> Calculator(context,modifier)
+        Screen.Home -> HomeScreen(userCalorieData,modifier)
+        Screen.Calculator -> Calculator(context,userCalorieData, modifier)
         Screen.Fridge -> Fridge(modifier)
     }
 }
