@@ -66,4 +66,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("androidx.compose.material:material-icons-extended")
     implementation ("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.accompanist:accompanist-pager:0.17.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.17.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.5")
 }
