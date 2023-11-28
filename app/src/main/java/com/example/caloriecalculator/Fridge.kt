@@ -1,38 +1,34 @@
 package com.example.caloriecalculator
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.example.caloriecalculator.ui.theme.Tab
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.caloriecalculator.ui.theme.AddProduct
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Fridge(modifier: Modifier) {
-    MainScreen()
+fun Fridge(modifier: Modifier, navController: NavController) {
+    MainScreen(navController)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalPagerApi
 @Composable
-fun MainScreen(){
+fun MainScreen(navController: NavController) {
     val tabs = listOf(
-        Tab.ScreenProducts,
-        Tab.ScreenDishes
+        Tab("Продукты") { Products(navController) },
+        Tab("Блюда") { Dishes() }
     )
 
     val pagerState = rememberPagerState(pageCount = tabs.size)
@@ -59,7 +55,7 @@ val scope = rememberCoroutineScope()
         tabs.forEachIndexed{ index, tab ->
             androidx.compose.material.LeadingIconTab(
                 text = { Text(text = tab.title)},
-                icon = {null},
+                icon = {},
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -80,11 +76,19 @@ HorizontalPager(state = pagerState){ page ->
 }
 }
 @Composable
-fun Products(){
-    val     navController = rememberNavController()
-
-    NavigationComposeTheme{
-
+fun Products(navController: NavController){
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    )
+    {
+        Button(
+            onClick = { navController.navigate(Routes.Product.route) },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White),
+            modifier = Modifier.padding(55.dp)
+        ) {
+            Text(text = "Добавить продукт", fontSize = 18.sp)
+        }
     }
 }
 
