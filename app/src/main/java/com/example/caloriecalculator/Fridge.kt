@@ -28,7 +28,7 @@ fun Fridge(modifier: Modifier, navController: NavController) {
 fun MainScreen(navController: NavController) {
     val tabs = listOf(
         Tab("Продукты") { Products(navController) },
-        Tab("Блюда") { Dishes() }
+        Tab("Блюда") { Dishes(navController) }
     )
 
     val pagerState = rememberPagerState(pageCount = tabs.size)
@@ -45,7 +45,7 @@ fun Tabs(tabs: List<Tab>, pagerState: PagerState){
 val scope = rememberCoroutineScope()
     androidx.compose.material.TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = Color(0xffB7C1FC),
+        backgroundColor = Color(0xffD5E1FF ),
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -93,15 +93,18 @@ fun Products(navController: NavController){
 }
 
 @Composable
-fun Dishes(){
+fun Dishes(navController: NavController){
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
-    ) {
+    )
+    {
         Button(
-            onClick = { /* Handle button click */ },
+            onClick = { navController.navigate(Routes.Dish.route) },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffF26D8C), contentColor = Color.White),
             modifier = Modifier.padding(55.dp)
         ) {
+            Text(text = "Добавить блюдо", fontSize = 18.sp)
         }
     }
 }

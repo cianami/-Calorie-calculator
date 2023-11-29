@@ -3,6 +3,7 @@ package com.example.caloriecalculator.ui.theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,12 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.caloriecalculator.Gender
-import com.example.caloriecalculator.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddProduct(goBackCallback: () -> Unit) {
+fun AddDish(goBackCallback: () -> Unit){
     var textAge by remember { mutableStateOf("") }
     var textWeight by remember { mutableStateOf("") }
     var textHeight by remember { mutableStateOf("") }
@@ -24,17 +23,17 @@ fun AddProduct(goBackCallback: () -> Unit) {
         modifier = Modifier.background(Color.White).fillMaxSize()
     ) {
         Text(
-            text = "Добавь продукт в свой холодильник",
+            text = "Добавь готовое блюдо",
             color = Color(0xff3A6279),
-            fontSize = 26.sp,
             textAlign = TextAlign.Center,
+            fontSize = 26.sp,
             modifier = Modifier.offset(y=20.dp)
         )
         Column(
             modifier = Modifier.offset(y=40.dp),
         ) {
-            Text(
-                text = "Название продукта",
+            androidx.compose.material3.Text(
+                text = "Название блюда",
                 color = Color(0xff473366),
                 fontSize = 22.sp,
                 modifier = Modifier.padding(start = 15.dp)
@@ -48,9 +47,9 @@ fun AddProduct(goBackCallback: () -> Unit) {
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xffFFF9E9)
+                    containerColor = Color(0xffFFF5FE)
                 ),
-                placeholder = {Text("")},
+                placeholder = { androidx.compose.material3.Text("") },
                 singleLine = true,
                 onValueChange = { newText ->
                     if (newText.toIntOrNull() != null||newText=="") {
@@ -63,7 +62,7 @@ fun AddProduct(goBackCallback: () -> Unit) {
         Column(
             modifier = Modifier.offset(y=60.dp)
         ) {
-            Text(
+            androidx.compose.material3.Text(
                 text = "Калорийность на 100 грамм",
                 color = Color(0xff473366),
                 fontSize = 22.sp,
@@ -77,9 +76,9 @@ fun AddProduct(goBackCallback: () -> Unit) {
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xffFFF9E9)
+                    containerColor = Color(0xffFFF5FE)
                 ),
-                placeholder = {Text("")},
+                placeholder = { androidx.compose.material3.Text("") },
                 singleLine = true,
                 onValueChange = { newText ->
                     if (newText.toIntOrNull() != null||newText=="") {
@@ -95,10 +94,10 @@ fun AddProduct(goBackCallback: () -> Unit) {
         {
             Button(
                 onClick = goBackCallback,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFFAEF4), contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xff65D0ED), contentColor = Color.White),
                 modifier = Modifier.padding(30.dp)
             ) {
-                Text(text = "Добавить", fontSize = 22.sp)
+                androidx.compose.material3.Text(text = "Добавить", fontSize = 22.sp)
             }
         }
     }

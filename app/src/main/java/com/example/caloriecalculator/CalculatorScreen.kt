@@ -66,6 +66,7 @@ fun Calculator(context: Context,userCalorieData: UserCalorieData,modifier: Modif
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xffEFF2FF)
                 ),
                 placeholder = {Text("0")},
                 singleLine = true,
@@ -128,6 +129,7 @@ fun Calculator(context: Context,userCalorieData: UserCalorieData,modifier: Modif
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xffEFF2FF)
                 ),
                 placeholder = {Text("0")},
                 singleLine = true,
@@ -162,6 +164,7 @@ fun Calculator(context: Context,userCalorieData: UserCalorieData,modifier: Modif
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xffEFF2FF)
                 ),
                 placeholder = {Text("0")},
                 singleLine = true,
