@@ -1,5 +1,6 @@
 package com.example.caloriecalculator.ui.theme
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,15 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.caloriecalculator.Gender
-import com.example.caloriecalculator.Routes
+import com.example.caloriecalculator.db.DbManager
+import android.app.AlertDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddProduct(goBackCallback: () -> Unit) {
-    var textAge by remember { mutableStateOf("") }
-    var textWeight by remember { mutableStateOf("") }
-    var textHeight by remember { mutableStateOf("") }
+fun AddProduct(dbManager: DbManager, goBackCallback: () -> Unit) {
+    var foodname by remember { mutableStateOf("") }
+    var kkal by remember { mutableStateOf("") }
     Column(
         modifier = Modifier.background(Color.White).fillMaxSize()
     ) {
@@ -42,7 +42,7 @@ fun AddProduct(goBackCallback: () -> Unit) {
 
             TextField(
                 modifier = Modifier.width(350.dp).offset(y=5.dp).padding(start = 15.dp),
-                value = textAge,
+                value = foodname,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
@@ -53,9 +53,7 @@ fun AddProduct(goBackCallback: () -> Unit) {
                 placeholder = {Text("")},
                 singleLine = true,
                 onValueChange = { newText ->
-                    if (newText.toIntOrNull() != null||newText=="") {
-                        textAge = newText
-                    }
+                        foodname = newText
                 }
             )
 
@@ -71,7 +69,7 @@ fun AddProduct(goBackCallback: () -> Unit) {
             )
             TextField(
                 modifier = Modifier.width(100.dp).offset(y=5.dp).padding(start = 15.dp),
-                value = textWeight,
+                value = kkal,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
@@ -79,11 +77,11 @@ fun AddProduct(goBackCallback: () -> Unit) {
                     disabledIndicatorColor = Color.Transparent,
                     containerColor = Color(0xffFFF9E9)
                 ),
-                placeholder = {Text("")},
+                placeholder = {Text("0")},
                 singleLine = true,
                 onValueChange = { newText ->
                     if (newText.toIntOrNull() != null||newText=="") {
-                        textWeight = newText
+                        kkal = newText
                     }
                 }
             )
@@ -94,7 +92,10 @@ fun AddProduct(goBackCallback: () -> Unit) {
         )
         {
             Button(
-                onClick = goBackCallback,
+                onClick = {
+                        if(kkal=="")kkal="0";
+                        dbManager.insertData(foodname, kkal.toInt(), true); goBackCallback()
+                          },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFFAEF4), contentColor = Color.White),
                 modifier = Modifier.padding(30.dp)
             ) {

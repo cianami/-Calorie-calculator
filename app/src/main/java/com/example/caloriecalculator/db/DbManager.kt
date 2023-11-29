@@ -14,11 +14,33 @@ class DbManager(context: Context?) {
         database = dbHelper.getWritableDatabase()
     }
 
-    fun insertData(namefood: String?, kkal: Int) {
-        val insertQuery = "INSERT INTO MyTable (foodname, kkal) VALUES ('Тортик', 500);"
+    fun insertData(foodname: String?, kkal: Int, isProduct: Boolean) {
+        val insertQuery = "INSERT INTO MyTable (foodname, kkal, isProduct) VALUES ('$foodname', $kkal, $isProduct);"
         database.execSQL(insertQuery);
     }
 
+    fun getAllFoods(isProduct: Boolean): List<Food> {
+        val foods = mutableListOf<Food>()
+        val selectQuery = "SELECT * FROM MyTable WHERE isProduct=$isProduct"
+        database.rawQuery(selectQuery, null).use { // .use requires API 16
+            while (it.moveToNext()) {
+                var food=Food()
+                food.id = it.getInt(it.getColumnIndex("id").toInt())
+                food.foodname = it.getString(it.getColumnIndex("foodname").toInt())
+                food.kkal = it.getInt(it.getColumnIndex("kkal").toInt())
+                food.isProduct=isProduct
+                foods.add(food)
+            }
+        }
+        return foods
+    }
+}
+
+class Food{
+    public var id: Int=0;
+    public var foodname: String="";
+    public var kkal:Int=0;
+    public var isProduct: Boolean=false;
 }
 
 

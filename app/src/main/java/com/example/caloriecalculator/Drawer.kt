@@ -10,11 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.caloriecalculator.db.DbManager
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainDrawer(context: Context, userCalorieData: UserCalorieData, navController: NavController) {
+fun MainDrawer(context: Context, userCalorieData: UserCalorieData, navController: NavController, dbManager: DbManager) {
     var screenState by remember { mutableStateOf(Screen.Home) }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -24,7 +25,7 @@ fun MainDrawer(context: Context, userCalorieData: UserCalorieData, navController
             bottomBar = { BottomBar { screen -> screenState = screen } },
             modifier = Modifier.fillMaxSize()
         ) {
-            ScreenContents(context, screenState, userCalorieData, navController)
+            ScreenContents(context, screenState, userCalorieData, navController, dbManager)
         }
     }
 }
@@ -35,12 +36,13 @@ fun ScreenContents(
     selectedScreen: Screen,
     userCalorieData: UserCalorieData,
     navController: NavController,
-    modifier: Modifier = Modifier,
+    dbManager: DbManager,
+    modifier: Modifier = Modifier
 ) {
     when (selectedScreen) {
         Screen.Home -> HomeScreen(userCalorieData, modifier)
         Screen.Calculator -> Calculator(context, userCalorieData, modifier)
-        Screen.Fridge -> Fridge(modifier, navController)
+        Screen.Fridge -> Fridge(modifier, navController, dbManager)
     }
 }
 

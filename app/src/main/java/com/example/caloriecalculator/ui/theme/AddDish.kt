@@ -12,13 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.caloriecalculator.db.DbManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddDish(goBackCallback: () -> Unit){
-    var textAge by remember { mutableStateOf("") }
-    var textWeight by remember { mutableStateOf("") }
-    var textHeight by remember { mutableStateOf("") }
+fun AddDish(dbManager: DbManager, goBackCallback: () -> Unit){
+    var foodname by remember { mutableStateOf("") }
+    var kkal by remember { mutableStateOf("") }
     Column(
         modifier = Modifier.background(Color.White).fillMaxSize()
     ) {
@@ -41,7 +41,7 @@ fun AddDish(goBackCallback: () -> Unit){
 
             TextField(
                 modifier = Modifier.width(350.dp).offset(y=5.dp).padding(start = 15.dp),
-                value = textAge,
+                value = foodname,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
@@ -52,9 +52,7 @@ fun AddDish(goBackCallback: () -> Unit){
                 placeholder = { androidx.compose.material3.Text("") },
                 singleLine = true,
                 onValueChange = { newText ->
-                    if (newText.toIntOrNull() != null||newText=="") {
-                        textAge = newText
-                    }
+                        foodname = newText
                 }
             )
 
@@ -70,7 +68,7 @@ fun AddDish(goBackCallback: () -> Unit){
             )
             TextField(
                 modifier = Modifier.width(100.dp).offset(y=5.dp).padding(start = 15.dp),
-                value = textWeight,
+                value = kkal,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
@@ -78,11 +76,11 @@ fun AddDish(goBackCallback: () -> Unit){
                     disabledIndicatorColor = Color.Transparent,
                     containerColor = Color(0xffFFF5FE)
                 ),
-                placeholder = { androidx.compose.material3.Text("") },
+                placeholder = { androidx.compose.material3.Text("0") },
                 singleLine = true,
                 onValueChange = { newText ->
                     if (newText.toIntOrNull() != null||newText=="") {
-                        textWeight = newText
+                        kkal = newText
                     }
                 }
             )
@@ -93,7 +91,10 @@ fun AddDish(goBackCallback: () -> Unit){
         )
         {
             Button(
-                onClick = goBackCallback,
+                onClick = {
+                    if(kkal=="")kkal="0";
+                    dbManager.insertData(foodname, kkal.toInt(), false); goBackCallback()
+                          },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xff65D0ED), contentColor = Color.White),
                 modifier = Modifier.padding(30.dp)
             ) {

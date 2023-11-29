@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
         userCalorieData = convertFromJson(this);
 
         var dbmanager = DbManager(this);
-        dbmanager.insertData("rfff", 0);
 
         setContent {
             CalorieCalculatorTheme {
@@ -32,13 +31,13 @@ class MainActivity : ComponentActivity() {
                     startDestination = Routes.Home.route
                 ) {
                     composable(Routes.Home.route) {
-                        MainDrawer(currentInstance, userCalorieData, navController)
+                        MainDrawer(currentInstance, userCalorieData, navController, dbmanager)
                     }
                     composable(Routes.Product.route) {
-                        AddProduct { navController.navigate(Routes.Home.route) }
+                        AddProduct(dbmanager) { navController.navigate(Routes.Home.route)}
                     }
                     composable(Routes.Dish.route){
-                        AddDish{ navController.navigate(Routes.Home.route)}
+                        AddDish (dbmanager){ navController.navigate(Routes.Home.route)}
                     }
                 }
             }

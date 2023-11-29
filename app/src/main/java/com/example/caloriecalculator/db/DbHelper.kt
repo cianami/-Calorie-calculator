@@ -6,7 +6,7 @@ class DbHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
     override fun onCreate(db: SQLiteDatabase) {
         // Создайте таблицы базы данных здесь
         val createTableQuery =
-            "CREATE TABLE IF NOT EXISTS MyTable (id INTEGER PRIMARY KEY AUTOINCREMENT, foodname TEXT, kkal INTEGER);"
+            "CREATE TABLE IF NOT EXISTS MyTable (id INTEGER PRIMARY KEY AUTOINCREMENT, foodname TEXT, kkal INTEGER, isProduct BOOLEAN);"
         db.execSQL(createTableQuery)
     }
 
