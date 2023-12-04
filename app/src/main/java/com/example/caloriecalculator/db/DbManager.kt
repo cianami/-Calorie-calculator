@@ -15,13 +15,13 @@ class DbManager(context: Context?) {
     }
 
     fun insertData(foodname: String?, kkal: Int, isProduct: Boolean) {
-        val insertQuery = "INSERT INTO MyTable (foodname, kkal, isProduct) VALUES ('$foodname', $kkal, $isProduct);"
+        val insertQuery = "INSERT INTO MyTable (foodname, kkal, isProduct) VALUES ('$foodname', $kkal, ${if (isProduct) 1 else 0});"
         database.execSQL(insertQuery);
     }
 
     fun getAllFoods(isProduct: Boolean): List<Food> {
         val foods = mutableListOf<Food>()
-        val selectQuery = "SELECT * FROM MyTable WHERE isProduct=$isProduct"
+        val selectQuery = "SELECT * FROM MyTable WHERE isProduct=${if (isProduct) 1 else 0}"
         database.rawQuery(selectQuery, null).use { // .use requires API 16
             while (it.moveToNext()) {
                 var food=Food()
