@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import com.example.caloriecalculator.ui.theme.CalorieCalculatorTheme
 import androidx.navigation.compose.*
 import com.example.caloriecalculator.db.DbManager
+import com.example.caloriecalculator.ui.theme.AddDailyProduct
 import com.example.caloriecalculator.ui.theme.AddDish
 import com.example.caloriecalculator.ui.theme.AddProduct
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -39,6 +40,9 @@ class MainActivity : ComponentActivity() {
                     composable(Routes.Dish.route){
                         AddDish (dbmanager){ navController.navigate(Routes.Home.route)}
                     }
+                    composable(Routes.DailyProduct.route){
+                        AddDailyProduct() {navController.navigate(Routes.Home.route)}
+                    }
                 }
             }
         }
@@ -48,5 +52,6 @@ class MainActivity : ComponentActivity() {
 enum class Routes(val route: String) {
     Home("home"),
     Product("product"),
-    Dish("dish")
+    Dish("dish"),
+    DailyProduct("daily")
 }

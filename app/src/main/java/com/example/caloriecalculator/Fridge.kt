@@ -3,6 +3,8 @@ package com.example.caloriecalculator
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -17,6 +19,8 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.example.caloriecalculator.db.DbManager
+import com.example.caloriecalculator.ui.theme.simpleVerticalScrollbar
+import scrollbar
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -34,7 +38,7 @@ fun MainScreen(navController: NavController, dbManager: DbManager) {
         Tab("Блюда") { Dishes(navController, dbManager) }
     )
 
-    val pagerState = rememberPagerState(pageCount = tabs.size)
+    val pagerState = rememberPagerState(pageCount = tabs.size, initialPage = currentPage)
 
     androidx.compose.material.Scaffold {
         Column {
@@ -65,6 +69,7 @@ val scope = rememberCoroutineScope()
                 onClick = {
                     scope.launch {
                         pagerState.animateScrollToPage(index)
+                        currentPage = index
                     }
                 }
             )
@@ -88,18 +93,18 @@ fun Products(navController: NavController, dbManager: DbManager){
             .fillMaxSize()
     )
     {
-        Column(
+        LazyColumn(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .scrollbar(rememberLazyListState(), false, thickness = 10.dp)
         )
-        {
-            val products=dbManager.getAllFoods(true)
-            for (product in products)
-            {
+        { item {
+            val products = dbManager.getAllFoods(true)
+            for (product in products) {
                 Card(product.foodname, 100, product.kkal)
             }
             Spacer(modifier = Modifier.height(110.dp))
+            }
         }
     }
 
@@ -155,3 +160,5 @@ fun Dishes(navController: NavController, dbManager: DbManager){
         }
     }
 }
+
+var currentPage = 0

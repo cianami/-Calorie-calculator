@@ -1,5 +1,7 @@
 package com.example.caloriecalculator
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.caloriecalculator.db.DbManager
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Date
@@ -80,7 +86,7 @@ fun FilledButton() {
 
 
 @Composable
-fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier) {
+fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier, navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier =
@@ -93,7 +99,9 @@ fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier) {
         CircleAndInd(userCalorieData,1037)
         Button(
             modifier = Modifier.width(260.dp).height(100.dp)
-                .wrapContentSize(Alignment.Center).offset(y = 32.dp), onClick = { showDialog = true },
+                .wrapContentSize(Alignment.Center)
+                .offset(y = 32.dp),
+            onClick = { navController.navigate(Routes.DailyProduct.route) },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White)
         )
         {
@@ -131,13 +139,6 @@ fun DailyNorm(norm: Int){
         )
     }
 }
-
 fun onClick() {
     TODO("Not yet implemented")
-}
-
-@Composable
-@Preview
-fun HomeScreenPreview(){
-    HomeScreen(UserCalorieData(),Modifier)
 }
