@@ -107,8 +107,6 @@ fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier, navControlle
         {
             Text("Добавить продукты", fontSize = 22.sp)
         }
-        Card("Каша гречневая с курицей", 200, 265)
-        Card("Творог 1%", 100, 229)
     }
 }
 
