@@ -1,10 +1,15 @@
 package com.example.caloriecalculator
 
 import android.annotation.SuppressLint
+import android.widget.ScrollView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.caloriecalculator.db.DbManager
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import scrollbar
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Date
@@ -33,9 +39,14 @@ fun CircleShapeDemo() {
 
 @Composable
 fun ExampleBox(shape: Shape) {
-    Column(modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentSize(Alignment.Center)) {
         Box(
-            modifier = Modifier.size(220.dp).clip(shape).background(Color(0xffF2F6F7))
+            modifier = Modifier
+                .size(220.dp)
+                .clip(shape)
+                .background(Color(0xffF2F6F7))
 
         )
     }
@@ -75,7 +86,8 @@ fun CircleAndInd(userCalorieData: UserCalorieData,calorie:Int) {
 @Composable
 fun FilledButton() {
     Button(
-        modifier = Modifier.size(height = 50.dp, width = 150.dp)
+        modifier = Modifier
+            .size(height = 50.dp, width = 150.dp)
             .wrapContentSize(Alignment.Center), onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White)
     )
@@ -86,36 +98,77 @@ fun FilledButton() {
 
 
 @Composable
-fun HomeScreen(userCalorieData: UserCalorieData,modifier: Modifier, navController: NavController) {
-    var showDialog by remember { mutableStateOf(false) }
+fun HomeScreen(dbManager: DbManager, userCalorieData: UserCalorieData,modifier: Modifier, navController: NavController) {
+    var calorie by remember { mutableStateOf(0) }
     Column(
-        modifier =
-        modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CurrentDate( SimpleDateFormat("d MMMM, EEEE", Locale("ru", "RU")).format(Date()))
-        DailyNorm(userCalorieData.result)
-        CircleAndInd(userCalorieData,1037)
-        Button(
-            modifier = Modifier.width(260.dp).height(100.dp)
-                .wrapContentSize(Alignment.Center)
-                .offset(y = 32.dp),
-            onClick = { navController.navigate(Routes.DailyProduct.route) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(60.dp))
+            CurrentDate( SimpleDateFormat("d MMMM, EEEE", Locale("ru", "RU")).format(Date()))
+            Spacer(modifier = Modifier.height(20.dp))
+            DailyNorm(userCalorieData.result)
+            Spacer(modifier = Modifier.height(20.dp))
+            CircleAndInd(userCalorieData,calorie)
+            Button(
+                modifier = Modifier
+                    .width(260.dp)
+                    .height(140.dp)
+                    .wrapContentSize(Alignment.Center)
+                    .offset(y = 32.dp),
+                onClick = { navController.navigate(Routes.DailyProduct.route) },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White)
+            )
+            {
+                Text("Добавить продукты", fontSize = 22.sp)
+            }
+        }
+        Divider(
+            color = Color(0xff3A6279),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        LazyColumn(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .scrollbar(rememberLazyListState(), false, thickness = 10.dp)
         )
         {
-            Text("Добавить продукты", fontSize = 22.sp)
+            item {
+                val consumptions = dbManager.getAllTodayСonsumptions();
+                var tempcalorie=0;
+                var deleteid=-1;
+                for (consumption in consumptions) {
+                    val food = dbManager.findFood(consumption.id_food)
+                    Card(
+                        food.foodname,
+                        consumption.gram,
+                        food.kkal*consumption.gram/100,
+                        consumption.id
+                    ) {
+                        deleteid = consumption.id;
+                        dbManager.deleteСonsumption(deleteid);
+                        //calorie=0;
+                    }
+                    tempcalorie+=food.kkal*consumption.gram/100;
+                }
+                if(tempcalorie!=calorie)calorie=tempcalorie;
+                Spacer(modifier = Modifier.height(110.dp))
+            }
         }
     }
 }
+
 
 @Composable
 fun CurrentDate(today: String){
     Text(
         text = today,
         color = Color(0xff3A6279),
-        modifier = Modifier.offset(y = -80.dp)
     )
 }
 
@@ -127,13 +180,13 @@ fun DailyNorm(norm: Int){
             text = "Ваша норма: ",
             fontSize = 27.sp,
             color = Color(0xff544161),
-            modifier = Modifier.offset(y = -30.dp)
+
         )
         Text(
             text = "$norm",
             fontSize = 30.sp,
             color = Color(0xff544161),
-            modifier = Modifier.offset(y = -30.dp)
+
         )
     }
 }
