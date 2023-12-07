@@ -114,15 +114,18 @@ fun HomeScreen(dbManager: DbManager, userCalorieData: UserCalorieData,modifier: 
             CircleAndInd(userCalorieData,calorie)
             Button(
                 modifier = Modifier
-                    .width(260.dp)
+                    .width(280.dp)
                     .height(140.dp)
                     .wrapContentSize(Alignment.Center)
                     .offset(y = 32.dp),
-                onClick = { navController.navigate(Routes.DailyProduct.route) },
+                onClick = {
+                    if(dbManager.getAllFoods(true).isEmpty()&&dbManager.getAllFoods(false).isEmpty()){}
+                    else {navController.navigate(Routes.DailyProduct.route);}
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFBC89D), contentColor = Color.White)
             )
             {
-                Text("Добавить продукты", fontSize = 22.sp)
+                Text("Добавить потребление", fontSize = 20.sp)
             }
         }
         Divider(
@@ -141,7 +144,6 @@ fun HomeScreen(dbManager: DbManager, userCalorieData: UserCalorieData,modifier: 
             item {
                 val consumptions = dbManager.getAllTodayСonsumptions();
                 var tempcalorie=0;
-                var deleteid=-1;
                 for (consumption in consumptions) {
                     val food = dbManager.findFood(consumption.id_food)
                     Card(
@@ -150,9 +152,8 @@ fun HomeScreen(dbManager: DbManager, userCalorieData: UserCalorieData,modifier: 
                         food.kkal*consumption.gram/100,
                         consumption.id
                     ) {
-                        deleteid = consumption.id;
-                        dbManager.deleteСonsumption(deleteid);
-                        //calorie=0;
+                        dbManager.deleteСonsumption(consumption.id);
+                        navController.navigate(Routes.Home.route);
                     }
                     tempcalorie+=food.kkal*consumption.gram/100;
                 }

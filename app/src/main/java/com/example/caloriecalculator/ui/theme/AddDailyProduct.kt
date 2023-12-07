@@ -1,11 +1,9 @@
 package com.example.caloriecalculator.ui.theme
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -18,21 +16,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
-import com.example.caloriecalculator.Gender
-import com.example.caloriecalculator.ResultText
-import com.example.caloriecalculator.UserCalorieData
-import com.example.caloriecalculator.a
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
+import com.example.caloriecalculator.db.DbManager
+import com.example.caloriecalculator.db.Food
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun AddDailyProduct(goBackCallback: () -> Unit) {
-    val selectType = remember { mutableStateOf(Type.product) }
+fun AddDailyProduct(dbManager: DbManager, goBackCallback: () -> Unit) {
+    var selectType = remember { mutableStateOf(Type.product) }
+    var gram by remember { mutableStateOf("") }
+    var productIsEmpty=dbManager.getAllFoods(true).isEmpty();
+    var dishIsEmpty=dbManager.getAllFoods(false).isEmpty();
+    if(productIsEmpty)selectType=remember { mutableStateOf(Type.dish) };
+    var selectedFood by remember { mutableStateOf(dbManager.getAllFoods(!productIsEmpty)[0]) }
+
     Column(
         modifier =
         Modifier
@@ -44,7 +43,7 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
         horizontalAlignment = Alignment.Start
     ) {
         androidx.compose.material3.Text(
-            text = "Добавь продукт в свой ежедневный рацион",
+            text = "Добавьте потребление",
             color = Color(0xff3A6279),
             fontSize = 22.sp,
             textAlign = TextAlign.Center,
@@ -62,13 +61,14 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     RadioButton(
+                        enabled=!productIsEmpty,
                         selected = selectType.value == Type.product,
                         onClick = { selectType.value = Type.product },
-
                         )
                     androidx.compose.material3.Text(Type.product , fontSize = 20.sp, color = Color(0xff473366))
 
                     RadioButton(
+                        enabled=!dishIsEmpty,
                         selected = selectType.value == Type.dish,
                         onClick = { selectType.value = Type.dish }
                     )
@@ -76,7 +76,8 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
                 }
             }
         }
-        Demo_ExposedDropdownMenuBox()
+        if(selectType.value==Type.product) selectedFood=Demo_ExposedDropdownMenuBox(dbManager.getAllFoods(true));
+        if(selectType.value==Type.dish) selectedFood=Demo_ExposedDropdownMenuBox(dbManager.getAllFoods(false))
         Column(modifier = Modifier.offset()) {
             androidx.compose.material3.Text(
                 text = "Введите количество грамм",
@@ -87,7 +88,7 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
 
             TextField(
                 modifier = Modifier.width(100.dp).offset(y=25.dp),
-                value = "",
+                value = gram,
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
@@ -99,12 +100,12 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
                 singleLine = true,
                 onValueChange = { newText ->
                     if (newText.toIntOrNull() != null || newText == "") {
-
+                        gram=newText;
                     }
                 }
             )
         }
-        ResultKalorie(5)
+        ResultKalorie(result(selectedFood,gram))
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
@@ -112,6 +113,7 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
         {
             Button(
                 onClick = {
+                    dbManager.insertСonsumption(selectedFood.id,("0${gram}").toInt())
                     goBackCallback()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xffFFAEF4), contentColor = Color.White),
@@ -126,6 +128,12 @@ fun AddDailyProduct(goBackCallback: () -> Unit) {
 object Type {
     const val product = "Продукт"
     const val dish = "Блюдо"
+}
+
+fun result(selectedFood:Food,gram:String):Int{
+
+    var grami=("0${gram}").toInt();
+    return selectedFood.kkal*grami/100;
 }
 
 @Composable
@@ -151,17 +159,21 @@ fun ResultKalorie(result:Int){
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Demo_ExposedDropdownMenuBox() {
+fun Demo_ExposedDropdownMenuBox(foods:List<Food>):Food {
     val context = LocalContext.current
-    val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha", "Mocha", "Mocha", "Mocha", "Mocha", "Mocha", "Mocha")
+    val foodsString = Array(foods.size) { "" };
+    for (i: Int in 0..foods.size - 1) {
+        foodsString[i] = "${foods[i].foodname} ${foods[i].kkal} ккал"
+    }
     var expanded by remember { mutableStateOf(false) }
-    var searchText by remember { mutableStateOf("") }
-    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
+    var searchText by remember { mutableStateOf(foodsString[0]) }
+    var selectedIndex by remember { mutableStateOf(0) }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top=32.dp)
-        .offset (),
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp)
+            .offset(),
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -195,20 +207,26 @@ fun Demo_ExposedDropdownMenuBox() {
                         .height(200.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    coffeeDrinks.filter { it.contains(searchText, ignoreCase = true) }
-                        .forEach { item ->
+                    foodsString.filter { it.contains(searchText, ignoreCase = true) }
+                        .forEachIndexed { index, item ->
                             DropdownMenuItem(
                                 onClick = {
-                                        searchText = item // Установить searchText равным выбранному элементу
-                                        expanded = false
-                                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                    searchText = item
+                                    expanded = false
+                                    selectedIndex=index
+                                    Toast.makeText(
+                                        context,
+                                        "Clicked item $index: $item",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             ) {
-                                Text(text = item)
+                                Text(text = "$item")
                             }
                         }
                 }
             }
         }
     }
+    return foods[selectedIndex];
 }

@@ -44,10 +44,10 @@ fun ScreenContents(
     modifier: Modifier = Modifier
 ) {
     when (selectedScreen) {
-        Screen.Home -> HomeScreen(userCalorieData, modifier, navController)
+        Screen.Home -> HomeScreen(dbManager,userCalorieData, modifier, navController)
         Screen.Calculator -> Calculator(context, userCalorieData, modifier)
         Screen.Fridge -> Fridge(modifier, navController, dbManager)
-        Screen.DailyProduct -> AddDailyProduct { navController.navigate(Routes.Home.route) }
+        Screen.DailyProduct -> AddDailyProduct(dbManager){  navController.navigate(Routes.Home.route) }
     }
 }
 

@@ -19,7 +19,6 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.example.caloriecalculator.db.DbManager
-import com.example.caloriecalculator.ui.theme.simpleVerticalScrollbar
 import scrollbar
 
 @OptIn(ExperimentalPagerApi::class)
@@ -101,7 +100,7 @@ fun Products(navController: NavController, dbManager: DbManager){
         { item {
             val products = dbManager.getAllFoods(true)
             for (product in products) {
-                Card(product.foodname, 100, product.kkal)
+                Card(product.foodname, 100, product.kkal,product.id, dbManager::delete)
             }
             Spacer(modifier = Modifier.height(110.dp))
             }
@@ -141,7 +140,7 @@ fun Dishes(navController: NavController, dbManager: DbManager){
             val dishes=dbManager.getAllFoods(false)
             for (dish in dishes)
             {
-                Card(dish.foodname, 100, dish.kkal)
+                Card(dish.foodname, 100, dish.kkal,dish.id, dbManager::delete)
             }
             Spacer(modifier = Modifier.height(110.dp))
         }

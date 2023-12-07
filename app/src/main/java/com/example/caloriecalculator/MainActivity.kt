@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         AddDish (dbmanager){ navController.navigate(Routes.Home.route)}
                     }
                     composable(Routes.DailyProduct.route){
-                        AddDailyProduct() {navController.navigate(Routes.Home.route)}
+                        AddDailyProduct(dbmanager) {navController.navigate(Routes.Home.route)}
                     }
                 }
             }
